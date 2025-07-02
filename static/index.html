@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube video downloader - VidSave™</title>
+    <link rel="icon" href="/static/favicon.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a, #3d0066);
+            color: #eee;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 40px;
+            background: #1b0033;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+            flex-wrap: wrap;
+        }
+
+        header img {
+            height: 140px;
+        }
+
+        .center-block {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .center-block h1 {
+            font-size: 32px;
+            color: #d18bf1;
+        }
+
+        .center-block p {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        header ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        header li {
+            display: inline;
+        }
+
+        header a {
+            color: #a870ff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        main h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #ffb3ff;
+        }
+
+        main p {
+            color: #ccc;
+            margin-bottom: 25px;
+        }
+
+        #loading {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff80ff;
+            margin-bottom: 20px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
+        }
+
+        input[type="text"] {
+            width: 60%;
+            padding: 12px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: none;
+            background: #2a003f;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        select {
+            margin-top: 20px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2f004d, #500075);
+            color: #803c80;
+            border: none;
+            font-size: 16px;
+            box-shadow: 0 0 10px #a000ff;
+            transition: 0.3s;
+        }
+
+        select:hover {
+            box-shadow: 0 0 15px #ff00ff;
+        }
+
+        button {
+            padding: 12px 20px;
+            margin: 12px;
+            background: linear-gradient(45deg, #9d00ff, #c800ff);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 0 10px #a000ff;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #c800ff, #ff00d4);
+            box-shadow: 0 0 20px #ff00ff;
+        }
+
+        #preview {
+            background: #1a002d;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 10px #550066;
+        }
+
+        #video-title {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #ffccff;
+        }
+
+        footer {
+            background: #1b0033;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #bbb;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.8);
+        }
+
+        footer h1 {
+            font-size: 18px;
+            color: #c770f0;
+            margin-bottom: 8px;
+        }
+
+        @media screen and (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .center-block {
+                position: static;
+                transform: none;
+            }
+
+            header h1 {
+                font-size: 22px;
+            }
+
+            input[type="text"],
+            button {
+                width: 90%;
+            }
+
+            header ul {
+                justify-content: center;
+            }
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <header>
+        <img src="/static/logo.png" height="140" alt="">
+        <div class="center-block">
+            <h1>Youtube and Instagram video downloader</h1>
+            <p>created by <strong>Humais</strong></p>
+        </div>
+
+        <ul>
+            <li>
+                <a href="/how-to-use.html">How to use</a>
+            </li>
+            <li>
+                <a href="sugesstion-section.html">Sugesstion section</a>
+            </li>
+        </ul>
+
+    </header>
+
+    <main>
+
+        <h1>Download From here 👇</h1>
+        <p>Paste the link and click Download Button</p>
+
+        <div id="loading" style="display: none; color: #aaa; margin-bottom: 10px;">
+            🔄 Loading preview...
+        </div>
+
+
+        <div id="preview" style="margin-top: 20px; display: none;">
+            <img id="thumbnail" src="" alt="Thumbnail" style="max-width: 300px;">
+            <h3 id="video-title"></h3>
+        </div>
+
+
+        <button onclick="showForm('yt')">YouTube</button>
+        <button onclick="showForm('insta')">Instagram</button>
+
+        <div id="yt-form">
+            <form action="/download/youtube" method="get">
+                <input type="text" name="youtube_url" placeholder="Paste YouTube link" required
+                    oninput="fetchPreviewDebounced()">
+                <select id="yt-quality" name="quality" required>
+                    <option value="" disabled selected hidden>Select Resolution</option>
+                </select>
+
+                <button type="submit">Download YouTube</button>
+            </form>
+
+        </div>
+
+        <div id="insta-form" style="display:none;">
+            <form action="/download/instagram" method="get">
+                <input type="text" name="instagram_url" placeholder="Paste Instagram link" required
+                    oninput="fetchPreviewDebounced()">
+                <select id="insta-quality" name="quality" required>
+                    <option value="" disabled selected hidden>Select Resolution</option>
+                </select>
+
+                <button type="submit">Download Instagram</button>
+            </form>
+
+        </div>
+
+
+
+    </main>
+
+    <footer>
+        <div>
+            <h1>
+                Youtube and Instagram video downloader
+            </h1>
+            <p>© 2025 | All Rights Reserved | Powered by VidSave™
+            </p>
+        </div>
+    </footer>
+
+</body>
+
+<script>
+    let debounceTimer;
+
+    function showForm(type) {
+        document.getElementById('yt-form').style.display = type === 'yt' ? 'block' : 'none';
+        document.getElementById('insta-form').style.display = type === 'insta' ? 'block' : 'none';
+        fetchPreviewDebounced(); // 🔥 auto trigger preview switch
+    }
+
+    function fetchPreviewDebounced() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(fetchPreview, 400); // 400ms debounce
+    }
+
+    function fetchPreview() {
+        let urlInput;
+        if (document.getElementById('yt-form').style.display !== 'none') {
+            urlInput = document.querySelector('#yt-form input');
+        } else {
+            urlInput = document.querySelector('#insta-form input');
+        }
+
+        const url = urlInput.value.trim();
+        if (!url) return;
+
+        document.getElementById("loading").style.display = "block";
+        document.getElementById("preview").style.display = "none";
+
+        const submitBtns = document.querySelectorAll("form button");
+        submitBtns.forEach(btn => btn.disabled = true); // 🚫 disable download
+
+        fetch(`/preview?url=${encodeURIComponent(url.split('&')[0])}`)
+
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("preview").style.display = "block";
+                document.getElementById("thumbnail").src = data.thumbnail;
+                document.getElementById("video-title").textContent = data.title;
+
+                const formats = data.formats || [];
+                const ytSelect = document.getElementById("yt-quality");
+                const instaSelect = document.getElementById("insta-quality");
+
+                [ytSelect, instaSelect].forEach(select => {
+                    select.innerHTML = '<option value="" disabled selected hidden>Select Resolution</option>';
+                    formats.forEach(fmt => {
+                        const opt = document.createElement("option");
+                        opt.value = fmt.format_id;
+                        opt.textContent = fmt.label;
+                        select.appendChild(opt);
+                    });
+                });
+
+
+                submitBtns.forEach(btn => btn.disabled = false); // ✅ re-enable download
+            })
+            .catch(() => {
+                document.getElementById("loading").textContent = "⚠️ Failed to load preview.";
+                submitBtns.forEach(btn => btn.disabled = true); // still block download
+            });
+    }
+
+</script>
+
+
+
+</html>
